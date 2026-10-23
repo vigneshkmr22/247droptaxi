@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CityCard } from './CityCard';
 import { PlaceInput } from './PlaceInput';
 import { cityQuote, tripQuote, ApiFailure } from '@/lib/api-client';
@@ -22,6 +22,10 @@ interface Result {
   params: Params;
 }
 
+/** Hero background pictures, shown one after another every HERO_SECONDS. */
+const HERO_IMAGES = ['/hero/hero-1.webp', '/hero/hero-2.webp', '/hero/hero-3.webp'];
+const HERO_SECONDS = 7;
+
 export function HomeClient({ cities, routes, tariff, packages, placesConfigured }: {
   cities: City[];
   routes: RouteItem[];
@@ -31,6 +35,12 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
 }) {
   const router = useRouter();
   const today = useMemo(() => localDate(), []);
+
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setSlide((i) => (i + 1) % HERO_IMAGES.length), HERO_SECONDS * 1000);
+    return () => clearInterval(t);
+  }, []);
 
   const [trip, setTripState] = useState<TripTab>('drop');
   const [placesDown, setPlacesDown] = useState(false);
@@ -197,10 +207,13 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
   return (
     <>
       <section className="hero">
+        <div className="hero-bg" aria-hidden="true">
+          {HERO_IMAGES.map((src, i) => <div key={src} className={`hero-slide${i === slide ? ' active' : ''}`} style={{ backgroundImage: `url(${src})` }} />)}
+        </div>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <span className="hero-badge"><b>★</b> Tamil Nadu · Puducherry · Bangalore drop taxi</span>
-            <h1>Services Across <span className="hl">200+ Cities</span></h1>
+            <h1>Services Across <span className="hl">South India</span></h1>
             <p className="hero-lead">Reliable one way and round trip taxis across Tamil Nadu, Pondicherry and Bangalore. Professional drivers, transparent pricing and a comfortable ride.</p>
           </div>
 

@@ -37,6 +37,10 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 .site-header { position: sticky; top: 0; z-index: 50; background: rgba(8, 9, 12, 0.94); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 .header-inner { position: relative; max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 14px; }
 .brand { color: #fff; font-weight: 800; font-size: 1.35rem; text-decoration: none; letter-spacing: -0.4px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; }
+.brand-logo { height: 32px; width: auto; display: block; }
+.footer-brand { display: flex; align-items: center; gap: 8px; }
+.brand .brand-text { background: none; padding: 0; margin: 0; color: inherit; }
 .brand span { background: var(--primary); color: #000; padding: 0 7px; border-radius: 7px; margin-right: 2px; }
 .site-nav { display: flex; align-items: center; gap: 2px; margin-left: auto; }
 .site-nav > a, .menu > summary { color: #e6e8ee; text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 0.93rem; cursor: pointer; list-style: none; transition: color 0.15s, background 0.15s; }
@@ -67,6 +71,10 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 
 /* hero: dark, with soft city-light glow drawn in CSS (no photo needed) */
 .hero { position: relative; isolation: isolate; overflow: hidden; color: #fff; padding: 72px 0 88px; min-height: 640px; display: flex; align-items: center; background: #070910 var(--hero-image, url('/hero-night-city.svg')) center / cover no-repeat; }
+/* background slideshow: the pictures cross-fade, the dark ::before layer stays on top of them */
+.hero-bg { position: absolute; inset: 0; z-index: -2; background: #070910; }
+.hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease-in-out; }
+.hero-slide.active { opacity: 1; }
 /* darkens the text side so the headline stays readable over the picture; replace --hero-image with a photo any time */
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(4, 5, 9, 0.7) 0%, rgba(4, 5, 9, 0.38) 50%, rgba(4, 5, 9, 0.12) 100%), linear-gradient(180deg, rgba(4, 5, 9, 0.4) 0%, transparent 28%, rgba(4, 5, 9, 0.35) 100%); }
 .hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.7; }
@@ -115,6 +123,13 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 .fab:hover { background: var(--primary); color: #000; transform: translateY(-2px); }
 .fab svg { width: 24px; height: 24px; fill: currentColor; }
 @media (max-width: 640px) { .fab { width: 46px; height: 46px; } .fab svg { width: 21px; height: 21px; } }
+/* back to top */
+.scroll-top { position: fixed; left: 14px; bottom: 18px; z-index: 60; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; padding: 0; background: var(--primary); color: #000; border: 0; cursor: pointer; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s, background 0.15s; }
+.scroll-top.show { opacity: 1; visibility: visible; transform: none; }
+.scroll-top:hover { background: var(--primary-hover); }
+.scroll-top svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+/* on the booking page the sticky total bar sits at the bottom, so lift the floating buttons above it */
+@media (max-width: 700px) { body:has(.book-bar) .scroll-top, body:has(.book-bar) .fab-stack { bottom: 90px; } }
 /* generic sections */
 .section { padding: 36px 0; }
 .section.alt { background: #fff; }

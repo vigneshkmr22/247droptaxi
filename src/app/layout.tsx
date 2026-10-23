@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { SiteHeader } from '@/components/SiteHeader';
 import { FabStack, SiteFooter } from '@/components/SiteFooter';
+import { ScrollTop } from '@/components/ScrollTop';
 import { getSettings } from '@/lib/settings';
 import { siteUrl } from '@/lib/config';
 
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteHeader phone={supportPhone} />
         <main>{children}</main>
         <SiteFooter phone={supportPhone} />
+        <ScrollTop />
         <FabStack phone={supportPhone} whatsapp={whatsappNumber} />
       </body>
     </html>
