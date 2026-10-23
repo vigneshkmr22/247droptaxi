@@ -178,7 +178,6 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
     router.push(`/book?${q}`);
   }
 
-  const isBest = (q: FareQuote, all: FareQuote[]) => all.length > 1 && q.total === Math.min(...all.map((x) => x.total));
   const toggleCard = (id: number) => setOpenCards((list) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]));
 
   const cityOptions = (id: string, name: string, value: string, set: (v: string) => void, placeholder: string, label: string) => (
@@ -279,10 +278,9 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
             <div className="fare-grid">
               {result.quotes.map((q) => {
                 const open = openCards.includes(q.vehicleId);
-                const best = isBest(q, result.quotes);
                 return (
-                  <article key={q.vehicleId} className={`fare-card${best ? ' best' : ''}${open ? ' open' : ''}`}>
-                    {best && <span className="fare-badge">Best price</span>}
+                  <article key={q.vehicleId} className={`fare-card${open ? ' open' : ''}`}>
+                    <span className="fare-badge">Best price</span>
                     <div className="fare-top">
                       {q.image ? (
                         // eslint-disable-next-line @next/next/no-img-element

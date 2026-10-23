@@ -115,8 +115,7 @@ export async function resolvePlaces(fromPlaceId: string, toPlaceId: string | nul
   }
   const days = tripDays(type, spec);
   if (!toPlaceId?.trim()) throw new ApiError(400, 'Choose a drop place');
-  const from = await google.place(fromPlaceId, sessionToken);
-  const to = await google.place(toPlaceId, sessionToken);
+  const [from, to] = await Promise.all([google.place(fromPlaceId, sessionToken), google.place(toPlaceId, sessionToken)]);
   if (from.placeId === to.placeId) throw new ApiError(400, 'Pickup and drop must be different places');
   const stored = await storedRouteFor(from, to);
   let leg: Leg;

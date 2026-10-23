@@ -446,3 +446,4 @@ main { min-height: 60vh; }
 .page-narrow h1, .page-wide h1, .page-city h1 { margin-top: 0; }
 .place-field label { display: block; }
 .vehicle-card .btn { margin-top: 0; width: auto; }
+.best-chip { align-self: flex-start; margin-top: 4px; background: var(--primary); color: #000; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; }

@@ -1,5 +1,6 @@
 import 'server-only';
 import { query, one } from './db';
+import { cached } from './cache';
 import { getSettings } from './settings';
 import { fareConfig } from './config';
 import { quote, type Vehicle } from './fare';
@@ -23,8 +24,9 @@ export const toVehicle = (r: VehicleRow): Vehicle => ({
 });
 
 /** Active vehicles ordered by rate, so the first one gives the lowest total. */
-export async function activeVehicles(): Promise<Vehicle[]> {
-  return (await query<VehicleRow>(`SELECT ${VEHICLE_COLS} FROM vehicle_types WHERE is_active ORDER BY rate_per_km, id`)).map(toVehicle);
+export function activeVehicles(): Promise<Vehicle[]> {
+  return cached('vehicles', async () =>
+    (await query<VehicleRow>(`SELECT ${VEHICLE_COLS} FROM vehicle_types WHERE is_active ORDER BY rate_per_km, id`)).map(toVehicle));
 }
 
 export async function allVehicles(): Promise<Vehicle[]> {
@@ -32,6 +34,8 @@ export async function allVehicles(): Promise<Vehicle[]> {
 }
 
 export async function vehicleById(id: number): Promise<Vehicle | null> {
+  const hit = (await activeVehicles()).find((v) => v.id === id);
+  if (hit) return hit;
   const r = await one<VehicleRow>(`SELECT ${VEHICLE_COLS} FROM vehicle_types WHERE id = $1`, [id]);
   return r ? toVehicle(r) : null;
 }
@@ -42,7 +46,7 @@ export interface CityRow {
 }
 const CITY_COLS = `id, name, slug, state, latitude::float8 AS latitude, longitude::float8 AS longitude, description, details, popular_spots, is_active`;
 
-export const activeCityRows = () => query<CityRow>(`SELECT ${CITY_COLS} FROM cities WHERE is_active ORDER BY name`);
+export const activeCityRows = () => cached('cities', () => query<CityRow>(`SELECT ${CITY_COLS} FROM cities WHERE is_active ORDER BY name`));
 export const cityRowBySlug = (slug: string) => one<CityRow>(`SELECT ${CITY_COLS} FROM cities WHERE slug = $1`, [slug]);
 
 export interface RouteRow {

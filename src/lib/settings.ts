@@ -1,5 +1,6 @@
 import 'server-only';
 import { query } from './db';
+import { cached, clearCaches } from './cache';
 
 export interface Settings {
   gstEnabled: boolean;
@@ -13,7 +14,11 @@ const DEFAULT_PHONE = '+910000000000';
 const DEFAULT_WHATSAPP = '910000000000';
 
 /** Staff-editable switches, read from the database on every call so a change applies at once. */
-export async function getSettings(): Promise<Settings> {
+export function getSettings(): Promise<Settings> {
+  return cached('settings', loadSettings);
+}
+
+async function loadSettings(): Promise<Settings> {
   const rows = await query<{ setting_key: string; setting_value: string }>('SELECT setting_key, setting_value FROM app_settings');
   const m = new Map(rows.map((r) => [r.setting_key, r.setting_value]));
   return {
@@ -39,4 +44,5 @@ export async function saveSetting(key: keyof Settings, value: string | boolean):
      ON CONFLICT (setting_key) DO UPDATE SET setting_value = EXCLUDED.setting_value`,
     [KEYS[key], String(value)],
   );
+  clearCaches();
 }

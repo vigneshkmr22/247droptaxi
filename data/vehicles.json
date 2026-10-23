@@ -1,1 +1,57 @@
-[{"id": 1, "name": "Hatchback", "seats": 4, "is_active": false, "image_file": "0a04a908f7fc468fadca3294e2efa6f0.jpg", "rate_per_km": 15.00, "driver_allowance": 300.00, "round_trip_rate_per_km": 15.00, "round_trip_driver_allowance": 300.00}, {"id": 2, "name": "Sedan", "seats": 4, "is_active": true, "image_file": "977cf9c123c54c198ea0265cd1b552c1.jpg", "rate_per_km": 15.00, "driver_allowance": 400.00, "round_trip_rate_per_km": 14.00, "round_trip_driver_allowance": 500.00}, {"id": 3, "name": "SUV", "seats": 6, "is_active": true, "image_file": "1fe7d40fe4d243da9da46d4427211db2.jpg", "rate_per_km": 20.00, "driver_allowance": 500.00, "round_trip_rate_per_km": 19.00, "round_trip_driver_allowance": 500.00}, {"id": 4, "name": "MUV", "seats": 7, "is_active": true, "image_file": "e99f5c08c1484d778ca890cc78ea1154.jpg", "rate_per_km": 21.00, "driver_allowance": 500.00, "round_trip_rate_per_km": 20.00, "round_trip_driver_allowance": 500.00}, {"id": 5, "name": "Innova Crysta", "seats": 7, "is_active": true, "image_file": "c33d992a55d94e19b126b4f33cf163bb.jpg", "rate_per_km": 25.00, "driver_allowance": 500.00, "round_trip_rate_per_km": 22.00, "round_trip_driver_allowance": 500.00}]
+[
+  {
+    "id": 1,
+    "name": "Hatchback",
+    "seats": 4,
+    "is_active": false,
+    "image_file": "0a04a908f7fc468fadca3294e2efa6f0.jpg",
+    "rate_per_km": 15,
+    "driver_allowance": 300,
+    "round_trip_rate_per_km": 15,
+    "round_trip_driver_allowance": 300
+  },
+  {
+    "id": 2,
+    "name": "Sedan",
+    "seats": 4,
+    "is_active": true,
+    "image_file": "sedan.webp",
+    "rate_per_km": 15,
+    "driver_allowance": 400,
+    "round_trip_rate_per_km": 14,
+    "round_trip_driver_allowance": 500
+  },
+  {
+    "id": 3,
+    "name": "SUV",
+    "seats": 6,
+    "is_active": true,
+    "image_file": "suv.jpg",
+    "rate_per_km": 20,
+    "driver_allowance": 500,
+    "round_trip_rate_per_km": 19,
+    "round_trip_driver_allowance": 500
+  },
+  {
+    "id": 4,
+    "name": "MUV",
+    "seats": 7,
+    "is_active": true,
+    "image_file": "muv.webp",
+    "rate_per_km": 21,
+    "driver_allowance": 500,
+    "round_trip_rate_per_km": 20,
+    "round_trip_driver_allowance": 500
+  },
+  {
+    "id": 5,
+    "name": "Innova Crysta",
+    "seats": 7,
+    "is_active": true,
+    "image_file": "innova-crysta.jpg",
+    "rate_per_km": 25,
+    "driver_allowance": 500,
+    "round_trip_rate_per_km": 22,
+    "round_trip_driver_allowance": 500
+  }
+]

@@ -26,7 +26,7 @@ export function RouteVehicles({ route: r, gst }: { route: RouteResponse; gst: bo
               ) : (
                 <span className="vehicle-photo vehicle-emoji" aria-hidden="true">{q.seats > 4 ? '🚐' : '🚗'}</span>
               )}
-              <div className="vehicle-name"><strong>{q.vehicle}</strong><span className="note">{q.seats}+1 seats</span></div>
+              <div className="vehicle-name"><strong>{q.vehicle}</strong><span className="note">{q.seats}+1 seats</span><span className="best-chip">Best price</span></div>
               <div className="vehicle-fare"><small>Estimated fare</small><span className="price">{inr(q.total, 0)}</span></div>
               <div className="vehicle-actions">
                 <button type="button" className="vehicle-details-btn" aria-expanded={isOpen} aria-controls={`split-${q.vehicleId}`} onClick={() => toggle(q.vehicleId)}>

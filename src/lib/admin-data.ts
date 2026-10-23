@@ -3,6 +3,7 @@ import { ApiError } from './http';
 import { query, one } from './db';
 import { allVehicles, vehicleById } from './catalog';
 import { deleteImage, storeImage } from './media';
+import { clearCaches } from './cache';
 
 export const MAX_CITY_IMAGES = 3;
 
@@ -34,6 +35,7 @@ export async function updateRates(id: number, body: Record<string, unknown>) {
     [id, num(body.ratePerKm, 'ratePerKm', 0.01, 9999.99), num(body.driverAllowance, 'driverAllowance', 0, 99999.99),
       num(body.roundTripRatePerKm, 'roundTripRatePerKm', 0.01, 9999.99), num(body.roundTripDriverAllowance, 'roundTripDriverAllowance', 0, 99999.99)],
   );
+  clearCaches();
   return toVehicleRow((await vehicleById(id))!);
 }
 
@@ -42,6 +44,7 @@ export async function setVehicleImage(id: number, file: unknown | null) {
   if (!v) throw new ApiError(404, 'Vehicle not found');
   const name = file === null ? null : await storeImage(file, 'vehicles');
   await query('UPDATE vehicle_types SET image_file = $2 WHERE id = $1', [id, name]);
+  clearCaches();
   await deleteImage(v.imageFile);
   return toVehicleRow((await vehicleById(id))!);
 }
@@ -83,6 +86,7 @@ export async function updateCity(slug: string, body: Record<string, unknown>) {
   if (spots.length > 8) throw new ApiError(400, 'popularSpots can have at most 8 entries');
   if (spots.some((s) => s.length > 80)) throw new ApiError(400, 'Each popular spot must be at most 80 characters');
   await query('UPDATE cities SET description = $2, details = $3, popular_spots = $4::jsonb WHERE id = $1', [city.id, description, details, JSON.stringify(spots)]);
+  clearCaches();
   return cityRow(await findCity(slug));
 }
 
