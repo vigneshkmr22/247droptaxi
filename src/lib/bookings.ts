@@ -1,5 +1,7 @@
 import 'server-only';
 import { randomInt } from 'node:crypto';
+import { after } from 'next/server';
+import { sendBookingAlert } from './notify';
 import { ApiError } from './http';
 import { query, one } from './db';
 import { quote, findPackage } from './fare';
@@ -116,7 +118,16 @@ export async function createBooking(req: BookingRequest): Promise<BookingRespons
         type === 'ROUND_TRIP' ? req.returnDate : null, type === 'PACKAGE' ? req.packageHours : null, type === 'PACKAGE' ? packageKm : null,
         common.passengers, common.luggage, common.pickupAddress, common.notes, total],
     );
-    if (rows[0]) return { reference: rows[0].reference, status: rows[0].status, from: trip.fromLabel, to: trip.toLabel, vehicle: vehicle!.name, total };
+    if (rows[0]) {
+      // email the owner after the response has gone out, so the customer never waits for it
+      after(() => sendBookingAlert({
+        reference: rows[0].reference, tripType: type, from: trip.fromLabel, to: trip.toLabel, vehicle: vehicle!.name, total,
+        customerName: common.customerName, mobile: common.mobile, email: common.email, pickupDate: common.pickupDate, pickupTime: common.pickupTime,
+        returnDate: type === 'ROUND_TRIP' ? (req.returnDate ?? null) : null, packageHours: type === 'PACKAGE' ? (req.packageHours ?? null) : null,
+        passengers: common.passengers, luggage: common.luggage, pickupAddress: common.pickupAddress, notes: common.notes,
+      }));
+      return { reference: rows[0].reference, status: rows[0].status, from: trip.fromLabel, to: trip.toLabel, vehicle: vehicle!.name, total };
+    }
   }
   throw new ApiError(500, 'Could not create the booking. Please try again.');
 }

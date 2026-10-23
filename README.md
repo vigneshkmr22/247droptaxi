@@ -41,6 +41,10 @@ With no `DATABASE_URL` the app uses PGlite, a Postgres that runs inside Node, so
    ```
 7. **Deploy** (or redeploy). Add your domain under **Settings > Domains** and set the DNS records Vercel shows at GoDaddy.
 
+## Booking alert emails
+
+Set `RESEND_API_KEY` and `BOOKING_ALERT_EMAIL` (comma separated for several people) and every new booking is emailed to you. Free account at resend.com; without a verified domain Resend only delivers to the email you signed up with, which is fine for owner alerts. Optional `BOOKING_ALERT_FROM` sets the sender once you verify a domain.
+
 ## Things to know
 
 - Photos you upload in `/admin` go to Vercel Blob. Vercel limits a request to about 4.5 MB, so the upload limit is 4 MB.
