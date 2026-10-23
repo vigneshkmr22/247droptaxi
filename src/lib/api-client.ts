@@ -1,0 +1,50 @@
+// Browser-side calls to our own API routes.
+import type { BookingRequest, BookingResponse, PlaceSuggestion, TripQuote, TripSpec } from './types';
+
+export class ApiFailure extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+  }
+}
+
+async function request<T>(url: string, init?: RequestInit): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(url, init);
+  } catch {
+    throw new ApiFailure('Could not reach the server. Please check your connection and try again.', 0);
+  }
+  const body = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiFailure((body as { message?: string } | null)?.message || '', res.status);
+  return body as T;
+}
+
+const json = (data: unknown): RequestInit => ({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+
+export const getRoute = (slug: string) => request(`/api/routes/${encodeURIComponent(slug)}`);
+export const cityQuote = (fromSlug: string, toSlug: string | null, spec: TripSpec = {}) =>
+  request<TripQuote>('/api/city-quote', json({ fromSlug, toSlug, ...spec }));
+export const tripQuote = (fromPlaceId: string, toPlaceId: string | null, spec: TripSpec = {}) =>
+  request<TripQuote>('/api/trip-quote', json({ fromPlaceId, toPlaceId, ...spec }));
+export const createBooking = (body: BookingRequest) => request<BookingResponse>('/api/bookings', json(body));
+
+/** Suggestions for the typed text, or null when the search itself failed (quota, outage) so the page can fall back. */
+export async function autocomplete(q: string, session: string): Promise<PlaceSuggestion[] | null> {
+  try {
+    return await request<PlaceSuggestion[]>(`/api/places/autocomplete?q=${encodeURIComponent(q)}&session=${encodeURIComponent(session)}`);
+  } catch {
+    return null;
+  }
+}
+
+/** Admin calls: the token travels in a header and is only kept in memory by the admin page. */
+export async function adminRequest<T>(token: string, path: string, method = 'GET', body?: unknown): Promise<T> {
+  const headers: Record<string, string> = { 'X-Admin-Token': token };
+  let payload: BodyInit | undefined;
+  if (body instanceof FormData) payload = body;
+  else if (body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+    payload = JSON.stringify(body);
+  }
+  return request<T>(`/api/admin${path}`, { method, headers, body: payload });
+}
