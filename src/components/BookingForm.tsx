@@ -254,7 +254,18 @@ export function BookingForm({ params, gst }: { params: Record<string, string>; g
 
             {error && <p className="error" role="alert">{error}</p>}
 
-            <button className="btn" type="submit" disabled={busy}>{busy ? 'Booking…' : 'Book now'}</button>
+            <div className="book-bar">
+              {(() => {
+                const chosen = trip.quotes.find((q) => q.vehicleId === form.vehicleId);
+                return chosen && (
+                  <div className="book-bar-total">
+                    <small>{chosen.vehicle} · Total</small>
+                    <strong>{inr(chosen.total, 0)}</strong>
+                  </div>
+                );
+              })()}
+              <button className="btn" type="submit" disabled={busy}>{busy ? 'Booking…' : 'Book now'}</button>
+            </div>
             {trip.tollsExtra ? (
               <p className="note">
                 The price is calculated by our server from the road distance and includes driver batta{gst ? ' and GST' : ''}.

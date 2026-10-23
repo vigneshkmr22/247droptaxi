@@ -153,13 +153,14 @@ select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px 
 .error { color: #b00020; }
 .ok { color: #1b6e2d; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-fieldset { border: 0; padding: 0; margin: 0 0 8px; }
+fieldset { border: 0; padding: 0; margin: 0 0 8px; min-width: 0; }
 legend { font-weight: 700; margin-bottom: 4px; }
 .choice { padding: 10px; border: 1px solid #c9ced6; border-radius: 8px; margin: 6px 0; font-weight: 400; transition: border-color 0.2s ease, background 0.2s ease; }
 .choice.selected { border-color: var(--primary); background: #fffaf0; box-shadow: 0 0 0 1px var(--primary); }
 .choice-main { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 400; cursor: pointer; }
 .choice input { width: auto; accent-color: #000; }
-.choice-main .price { margin-left: auto; font-weight: 800; }
+.choice { min-width: 0; }
+.choice-main .price { margin-left: auto; font-weight: 800; white-space: nowrap; }
 .facts { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .facts li { background: #fff; padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--primary); }
 .facts strong { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
@@ -426,6 +427,16 @@ textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--prima
 .choice-split span { display: inline-flex; gap: 5px; white-space: nowrap; flex: none; font-weight: 600; }
 .choice-split span:not(:last-child)::after { content: '|'; margin: 0 8px; color: #d9a31a; font-weight: 400; }
 .choice-split b { font-weight: 500; color: var(--muted); }
+
+/* Booking page: the chosen vehicle's total stays visible beside Book now (pinned to the bottom on phones) */
+.book-bar { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+.book-bar .btn { flex: 1; margin-top: 0; }
+.book-bar-total { display: flex; flex-direction: column; line-height: 1.2; }
+.book-bar-total small { font-size: 0.72rem; color: var(--muted); }
+.book-bar-total strong { font-size: 1.3rem; font-weight: 800; }
+@media (max-width: 700px) {
+  .book-bar { position: sticky; bottom: 0; z-index: 20; margin: 16px -16px -16px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid #e3e5e8; box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.12); border-radius: 0 0 var(--radius) var(--radius); }
+}
 
 /* Mandatory fields are marked with a red asterisk */
 .req::after { content: ' *'; color: #dc2626; font-weight: 800; }
