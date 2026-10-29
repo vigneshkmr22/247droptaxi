@@ -24,6 +24,7 @@ export interface TripInfo {
   fromPlaceId: string | null;
   toPlaceId: string | null;
   distanceKm: number;
+  durationMinutes?: number;
 }
 
 export interface Resolved {
@@ -68,7 +69,7 @@ async function priced(from: google.Place, to: google.Place, type: TripKind, days
       fromPlaceId: from.placeId, toPlaceId: to.placeId, distanceKm: leg.km, durationMinutes: leg.minutes, tollsExtra: true,
       quotes, tripType: type, days, packageHours: null, packageKm: null,
     },
-    trip: { routeId: leg.routeId, fromLabel: label(from), toLabel: label(to), fromPlaceId: from.placeId, toPlaceId: to.placeId, distanceKm: leg.km },
+    trip: { routeId: leg.routeId, fromLabel: label(from), toLabel: label(to), fromPlaceId: from.placeId, toPlaceId: to.placeId, distanceKm: leg.km, durationMinutes: leg.minutes },
   };
 }
 
@@ -84,7 +85,7 @@ async function packageResolved(from: google.Place, spec: TripSpec): Promise<Reso
       toPlaceId: null, distanceKm: pkg.km, durationMinutes: pkg.hours * 60, tollsExtra: true,
       quotes: vehicles.map((v) => quotePackage(pkg.hours, pkg.km, v, gstRate)), tripType: 'PACKAGE', days: 1, packageHours: pkg.hours, packageKm: pkg.km,
     },
-    trip: { routeId: null, fromLabel: label(from), toLabel: to, fromPlaceId: from.placeId, toPlaceId: null, distanceKm: pkg.km },
+    trip: { routeId: null, fromLabel: label(from), toLabel: to, fromPlaceId: from.placeId, toPlaceId: null, distanceKm: pkg.km, durationMinutes: pkg.hours * 60 },
   };
 }
 

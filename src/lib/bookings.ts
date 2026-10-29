@@ -1,7 +1,7 @@
 import 'server-only';
 import { randomInt } from 'node:crypto';
 import { after } from 'next/server';
-import { sendBookingAlert } from './notify';
+import { sendBookingNotifications } from './notify';
 import { ApiError } from './http';
 import { query, one } from './db';
 import { quote, findPackage } from './fare';
@@ -60,7 +60,7 @@ export const usesPlaces = (r: Partial<BookingRequest>): boolean =>
   nonBlank(r.fromPlaceId) || nonBlank(r.toPlaceId) || nonBlank(r.fromCitySlug) || nonBlank(r.toCitySlug);
 
 /** The total is always recomputed here; the client never supplies the price. */
-export async function createBooking(req: BookingRequest): Promise<BookingResponse> {
+export async function createBooking(req: BookingRequest, ip?: string): Promise<BookingResponse> {
   const type: TripKind = req.tripType ?? 'ONE_WAY';
   if (!['ONE_WAY', 'ROUND_TRIP', 'PACKAGE'].includes(type)) bad('Unknown trip type');
   let byRoute = nonBlank(req.routeSlug);
@@ -95,7 +95,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingRespons
   if (byRoute) {
     const { gstRate } = await cheapestVehicleAndGst();
     total = quote(Number(storedRoute!.distance_km), vehicle!, gstRate).total;
-    trip = { routeId: Number(storedRoute!.id), fromLabel: storedRoute!.from_name, toLabel: storedRoute!.to_name, fromPlaceId: null, toPlaceId: null, distanceKm: Number(storedRoute!.distance_km) };
+    trip = { routeId: Number(storedRoute!.id), fromLabel: storedRoute!.from_name, toLabel: storedRoute!.to_name, fromPlaceId: null, toPlaceId: null, distanceKm: Number(storedRoute!.distance_km), durationMinutes: Number(storedRoute!.duration_minutes) };
   } else {
     const spec = { tripType: type, pickupDate: common.pickupDate, returnDate: req.returnDate, packageHours: req.packageHours };
     const resolved = byCities ? await resolveCities(fromCity!, toCity, spec) : await resolvePlaces(req.fromPlaceId!, req.toPlaceId, null, spec);
@@ -119,12 +119,14 @@ export async function createBooking(req: BookingRequest): Promise<BookingRespons
         common.passengers, common.luggage, common.pickupAddress, common.notes, total],
     );
     if (rows[0]) {
-      // email the owner after the response has gone out, so the customer never waits for it
-      after(() => sendBookingAlert({
+      // email and WhatsApp the office and the customer after the response has gone out, so the customer never waits for it
+      after(() => sendBookingNotifications({
         reference: rows[0].reference, tripType: type, from: trip.fromLabel, to: trip.toLabel, vehicle: vehicle!.name, total,
         customerName: common.customerName, mobile: common.mobile, email: common.email, pickupDate: common.pickupDate, pickupTime: common.pickupTime,
         returnDate: type === 'ROUND_TRIP' ? (req.returnDate ?? null) : null, packageHours: type === 'PACKAGE' ? (req.packageHours ?? null) : null,
         passengers: common.passengers, luggage: common.luggage, pickupAddress: common.pickupAddress, notes: common.notes,
+        distanceKm: trip.distanceKm, durationMinutes: trip.durationMinutes ?? null, ip: ip ?? null,
+        ratePerKm: type === 'ROUND_TRIP' ? vehicle!.roundTripRatePerKm : vehicle!.ratePerKm,
       }));
       return { reference: rows[0].reference, status: rows[0].status, from: trip.fromLabel, to: trip.toLabel, vehicle: vehicle!.name, total };
     }
