@@ -23,18 +23,28 @@ function requireEnabled(): void {
 
 /** Runs a Google call; any failure becomes a generic 502 so no Google detail reaches the client. */
 async function call(url: string, init: RequestInit, what: string): Promise<any> {
-  try {
-    const res = await fetch(url, { ...init, signal: AbortSignal.timeout(TIMEOUT_MS), cache: 'no-store' });
-    if (res.status === 400 || res.status === 404) throw new ApiError(400, 'That place could not be found');
-    if (!res.ok) {
-      console.warn(`Google ${what} request rejected: HTTP ${res.status}`);
+  // Timeouts, network blips, 429 and 5xx are usually momentary, so they are retried once before giving up.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const res = await fetch(url, { ...init, signal: AbortSignal.timeout(TIMEOUT_MS), cache: 'no-store' });
+      if (res.status === 400 || res.status === 404) throw new ApiError(400, 'That place could not be found');
+      if (!res.ok) {
+        const transient = res.status === 429 || res.status >= 500;
+        if (transient && attempt === 1) {
+          await new Promise((r) => setTimeout(r, 300));
+          continue;
+        }
+        const detail = (await res.text().catch(() => '')).slice(0, 300);
+        console.warn(`Google ${what} request rejected: HTTP ${res.status} ${detail}`);
+        throw new ApiError(502, 'The maps service is unavailable. Please try again.');
+      }
+      return await res.json();
+    } catch (e) {
+      if (e instanceof ApiError) throw e;
+      if (attempt === 1) continue;
+      console.warn(`Google ${what} request failed:`, (e as Error).message);
       throw new ApiError(502, 'The maps service is unavailable. Please try again.');
     }
-    return await res.json();
-  } catch (e) {
-    if (e instanceof ApiError) throw e;
-    console.warn(`Google ${what} request failed:`, (e as Error).message);
-    throw new ApiError(502, 'The maps service is unavailable. Please try again.');
   }
 }
 
