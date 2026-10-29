@@ -122,10 +122,29 @@ export async function resolvePlaces(fromPlaceId: string, toPlaceId: string | nul
   if (stored) {
     leg = { km: Number(stored.distance_km), minutes: Number(stored.duration_minutes), mode: 'ROUTE', routeSlug: stored.slug, routeId: Number(stored.id) };
   } else {
-    const d = await google.drive(from, to);
-    leg = { km: checkedKm(d.distanceKm), minutes: d.durationMinutes, mode: 'DISTANCE', routeSlug: null, routeId: null };
+    leg = await placeLeg(from, to);
   }
   return priced(from, to, type, days, leg);
+}
+
+const placeLegs = new Map<string, { leg: Leg; expires: number }>();
+
+/** Road distance between two places: Google's (cached a day per pair to save quota), else an estimate when Google refuses (e.g. daily quota). */
+async function placeLeg(from: google.Place, to: google.Place): Promise<Leg> {
+  const key = `${from.lat.toFixed(3)},${from.lng.toFixed(3)}>${to.lat.toFixed(3)},${to.lng.toFixed(3)}`;
+  const hit = placeLegs.get(key);
+  if (hit && hit.expires > Date.now()) return hit.leg;
+  try {
+    const d = await google.drive(from, to);
+    const leg: Leg = { km: checkedKm(d.distanceKm), minutes: d.durationMinutes, mode: 'DISTANCE', routeSlug: null, routeId: null };
+    if (placeLegs.size > 5000) placeLegs.clear();
+    placeLegs.set(key, { leg, expires: Date.now() + 24 * 3_600_000 });
+    return leg;
+  } catch (e) {
+    if (!(e instanceof ApiError) || e.status !== 502) throw e;
+    const r = roughDistance({ latitude: from.lat, longitude: from.lng }, { latitude: to.lat, longitude: to.lng });
+    return { km: r.km, minutes: r.minutes, mode: 'ESTIMATE', routeSlug: null, routeId: null };
+  }
 }
 
 const cityLegs = new Map<string, { leg: Leg; expires: number }>();
