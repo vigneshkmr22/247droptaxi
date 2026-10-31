@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ApiFailure, cityQuote, createBooking, getRoute, tripQuote } from '@/lib/api-client';
 import { formatDuration, inr, localDate, localTime, num } from '@/lib/format';
@@ -20,6 +21,9 @@ interface TripView {
   /** Round trip length in days; 0 when not a round trip. */
   days: number;
 }
+
+/** Set once the reload check has run for this document load, so later visits to the page inside the app are left alone. */
+let reloadChecked = false;
 
 export function BookingForm({ params, gst }: { params: Record<string, string>; gst: boolean }) {
   const kind: TripKind = params.type === 'round' ? 'ROUND_TRIP' : params.type === 'package' ? 'PACKAGE' : 'ONE_WAY';
@@ -56,6 +60,15 @@ export function BookingForm({ params, gst }: { params: Record<string, string>; g
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => setForm((f) => ({ ...f, [key]: value }));
   const packageHours = Number(params.hours) || undefined;
   const started = useRef(false);
+  const router = useRouter();
+
+  // a browser refresh of the booking page starts over from the home page (only when this page itself was the one reloaded)
+  useEffect(() => {
+    if (reloadChecked) return;
+    reloadChecked = true;
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (nav?.type === 'reload' && new URL(nav.name).pathname === '/book') router.replace('/');
+  }, [router]);
 
   const heading = kind === 'ROUND_TRIP' ? 'Book your round trip taxi' : kind === 'PACKAGE' ? 'Book your package taxi' : 'Book your one way drop taxi';
 
