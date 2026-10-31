@@ -10,3 +10,5 @@ cab/
 
 .vercel
 .env*
+
+PROJECT_GUIDE.md
