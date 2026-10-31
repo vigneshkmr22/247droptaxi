@@ -15,8 +15,11 @@ export default async function BookPage({ searchParams }: { searchParams: Promise
   for (const [k, v] of Object.entries(raw)) if (typeof v === 'string') params[k] = v;
   const t = await tariff();
   return (
-    <div className="page-narrow">
-      <BookingForm params={params} gst={t.gstEnabled} />
-    </div>
+    <>
+      <div className="book-bg" aria-hidden="true" />
+      <div className="page-narrow book-page">
+        <BookingForm params={params} gst={t.gstEnabled} />
+      </div>
+    </>
   );
 }

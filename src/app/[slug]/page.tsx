@@ -42,7 +42,9 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
   const prices = r.quotes.map((q) => q.total);
   const url = `${siteUrl}/${r.slug}`;
   return (
-    <div className="page-narrow">
+    <>
+    <div className="book-bg" aria-hidden="true" />
+    <div className="page-narrow book-page">
       <JsonLd data={[
         {
           '@context': 'https://schema.org',
@@ -78,5 +80,6 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
       <p className="note">Total includes driver batta{t.gstEnabled ? ' and GST' : ''}. Toll and permit charges are extra, paid as per actuals.</p>
       <p><Link href="/">Check another route</Link></p>
     </div>
+    </>
   );
 }

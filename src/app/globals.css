@@ -70,9 +70,9 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 @media (max-width: 480px) { .header-call .num { display: none; } .header-call { padding: 10px 14px; } }
 
 /* hero: dark, with soft city-light glow drawn in CSS (no photo needed) */
-.hero { position: relative; isolation: isolate; overflow: hidden; color: #fff; padding: 72px 0 88px; min-height: 640px; display: flex; align-items: center; background: #070910 var(--hero-image, url('/hero-night-city.svg')) center / cover no-repeat; }
+.hero { position: relative; isolation: isolate; overflow: hidden; clip-path: inset(0); color: #fff; padding: 72px 0 88px; min-height: 640px; display: flex; align-items: center; background: #070910 var(--hero-image, url('/hero-night-city.svg')) center / cover no-repeat; }
 /* background slideshow: the pictures cross-fade, the dark ::before layer stays on top of them */
-.hero-bg { position: absolute; inset: 0; z-index: -2; background: #070910; }
+.hero-bg { position: fixed; inset: 0; height: 100vh; height: 100lvh; z-index: -2; background: #070910; }
 .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease-in-out; }
 .hero-slide.active { opacity: 1; }
 /* darkens the text side so the headline stays readable over the picture; replace --hero-image with a photo any time */
@@ -473,3 +473,9 @@ main { min-height: 60vh; }
 .place-field label { display: block; }
 .vehicle-card .btn { margin-top: 0; width: auto; }
 .best-chip { align-self: flex-start; margin-top: 4px; background: var(--primary); color: #000; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; }
+
+/* Booking page and route pages: the hero photo stays fixed behind a white card holding the content */
+.book-bg { position: fixed; inset: 0; height: 100vh; height: 100lvh; z-index: -1; background: #070910 url('/hero/hero-1.webp') center / cover no-repeat; }
+.book-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4, 5, 9, 0.5), rgba(4, 5, 9, 0.65)); }
+.book-page { width: calc(100% - 24px); margin: 28px auto; padding: 28px 24px; background: rgba(255, 255, 255, 0.95); border-radius: 18px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); }
+@media (max-width: 560px) { .book-page { padding: 20px 16px; margin: 16px auto; } }
