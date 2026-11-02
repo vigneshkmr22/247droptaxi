@@ -47,7 +47,7 @@ export function BookingForm({ params, gst }: { params: Record<string, string>; g
   const [form, setForm] = useState({
     vehicleId: 0,
     customerName: '',
-    mobile: '',
+    mobile: /^[6-9][0-9]{9}$/.test(params.mobile ?? '') ? params.mobile : '',
     email: '',
     pickupDate: params.date || today,
     pickupTime: params.time || '',

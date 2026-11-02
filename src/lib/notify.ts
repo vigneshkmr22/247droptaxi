@@ -69,16 +69,16 @@ function details(b: BookingAlert): [string, string][] {
 
 const FOOT = 'For Customer Intimation: Toll Gate, Permit, Hill Station Charges Extra';
 
-function render(b: BookingAlert, office: boolean): { html: string; text: string } {
-  const rows = details(b);
+function render(b: BookingAlert, office: boolean, rowsIn?: [string, string][], title = 'Confirmed Booking'): { html: string; text: string } {
+  const rows = rowsIn ?? details(b);
   const html =
-    `<h2 style="margin:0 0 4px">Confirmed Booking</h2><p style="margin:0 0 12px">Booking ID# <strong>${esc(b.reference)}</strong><br>Thanks for Choosing 247 Drop Taxi</p>` +
+    `<h2 style="margin:0 0 4px">${esc(title)}</h2><p style="margin:0 0 12px">${b.reference ? `Booking ID# <strong>${esc(b.reference)}</strong><br>` : ''}Thanks for Choosing 247 Drop Taxi</p>` +
     `<h3 style="margin:0 0 6px">Booking Details</h3>` +
     `<table cellpadding="4" style="border-collapse:collapse">${rows.map(([k, v]) => `<tr><td style="color:#555">${esc(k)}:</td><td><strong>${esc(v)}</strong></td></tr>`).join('')}</table>` +
     `<p>${FOOT}</p><p>For Question Contact: ${OFFICE_PHONE}<br><a href="${siteUrl}">www.247droptaxi.com</a></p>` +
     (office ? `<p style="color:#777">IP ADDRESS: ${esc(b.ip || '-')}<br>Passengers / bags: ${b.passengers} / ${b.luggage}<br>Pickup address: ${esc(b.pickupAddress)}${b.notes ? `<br>Notes: ${esc(b.notes)}` : ''}<br><a href="${siteUrl}/admin">Open the admin page</a></p>` : '');
   const text =
-    `Confirmed Booking\nBooking ID# ${b.reference}\nThanks for Choosing 247 Drop Taxi\n\nBooking Details\n` +
+    `${title}\n${b.reference ? `Booking ID# ${b.reference}\n` : ''}Thanks for Choosing 247 Drop Taxi\n\nBooking Details\n` +
     rows.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n${FOOT}\n\nFor Question Contact: ${OFFICE_PHONE}\nwww.247droptaxi.com` +
     (office ? `\n\nIP ADDRESS: ${b.ip || '-'}\nPassengers / bags: ${b.passengers} / ${b.luggage}\nPickup address: ${b.pickupAddress}${b.notes ? `\nNotes: ${b.notes}` : ''}\nAdmin: ${siteUrl}/admin` : '');
   return { html, text };
@@ -129,4 +129,44 @@ export async function sendBookingNotifications(b: BookingAlert): Promise<void> {
     if (customer && customer !== office) sends.push(sendWhatsApp(customer, params));
   }
   await Promise.allSettled(sends);
+}
+
+export interface EnquiryAlert {
+  mobile: string;
+  tripType: string;
+  from: string;
+  to: string;
+  pickupDate: string;
+  pickupTime: string;
+  returnDate: string | null;
+  packageHours: number | null;
+  distanceKm: number | null;
+  fares: { vehicle: string; total: number }[];
+  ip: string | null;
+}
+
+/** "Booking Enquiry" email to the office when a customer taps Explore cabs, in the same layout as the booking email. */
+export async function sendEnquiryNotification(e: EnquiryAlert): Promise<void> {
+  const officeTo = (process.env.BOOKING_ALERT_EMAIL ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (officeTo.length === 0) officeTo.push(OFFICE_EMAIL);
+  const rows: [string, string][] = [
+    ['Phone', e.mobile],
+    ['Pickup Location', e.from],
+    ['Drop Location', e.to || '-'],
+    ['Journey Type', TRIP_LABEL[e.tripType] ?? e.tripType],
+    ['Travel Date & Time', dateTime(e.pickupDate, e.pickupTime)],
+  ];
+  if (e.returnDate) rows.push(['Return Date', e.returnDate]);
+  if (e.packageHours) rows.push(['Package', `${e.packageHours} hours`]);
+  if (e.distanceKm) rows.push(['Trip Distance', `${e.distanceKm} KM`]);
+  for (const f of e.fares) rows.push([f.vehicle.toUpperCase(), rupees(f.total)]);
+  rows.push(['Toll', 'EXTRA']);
+  const stub = { reference: '' } as BookingAlert;
+  const o = render(stub, false, rows, 'Booking Enquiry');
+  await sendEmail(
+    officeTo,
+    `Booking enquiry ${e.mobile}: ${e.from} to ${e.to || '-'}`,
+    `${o.html}<p style="color:#777">IP ADDRESS: ${esc(e.ip || '-')}</p>`,
+    `${o.text}\nIP ADDRESS: ${e.ip || '-'}`,
+  );
 }

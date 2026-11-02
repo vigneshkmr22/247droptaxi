@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CityCard } from './CityCard';
 import { PlaceInput } from './PlaceInput';
-import { cityQuote, tripQuote, ApiFailure } from '@/lib/api-client';
+import { cityQuote, tripQuote, sendEnquiry, ApiFailure } from '@/lib/api-client';
 import { cityGradient, cityIcon } from '@/lib/city-theme';
 import { inr, localDate, localTime, num } from '@/lib/format';
 import { cityImageUrl, vehicleImageUrl } from '@/lib/types';
@@ -53,6 +53,8 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
   const [time, setTime] = useState(() => localTime());
   const [returnDate, setReturnDate] = useState('');
   const [packageHours, setPackageHours] = useState(8);
+  const [mobile, setMobile] = useState('');
+  const mobileOk = /^[6-9][0-9]{9}$/.test(mobile);
 
   const [quoting, setQuoting] = useState(false);
   const [quoteError, setQuoteError] = useState('');
@@ -125,9 +127,9 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
 
   const a = placesEnabled ? fromPlace?.placeId : from;
   const b = placesEnabled ? toPlace?.placeId : to;
-  const canSearch = trip === 'package'
+  const canSearch = mobileOk && (trip === 'package'
     ? !!a && !!date && packages.some((p) => p.hours === packageHours)
-    : !!a && !!b && a !== b && (trip !== 'round' || (!!date && !!returnDate && returnDate >= date));
+    : !!a && !!b && a !== b && (trip !== 'round' || (!!date && !!returnDate && returnDate >= date)));
 
   const scrollToFares = () => setTimeout(() => faresEl.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 
@@ -152,7 +154,7 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
 
     const tab = trip;
     const dropId = tab === 'package' ? null : (b ?? null);
-    const dateParams: Params = { ...(date ? { date } : {}), ...(time ? { time } : {}) };
+    const dateParams: Params = { ...(date ? { date } : {}), ...(time ? { time } : {}), mobile };
     // the booking page gets the same trip: place ids in Google mode, city slugs in dropdown mode
     const ends: Params = placesEnabled ? { from: a, ...(dropId ? { to: dropId } : {}) } : { fromCity: a, ...(dropId ? { toCity: dropId } : {}) };
     let spec: TripSpec = {};
@@ -174,6 +176,13 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
         note: tab === 'round' ? roundTripNote(q) : tab === 'drop' ? minKmNote(q.distanceKm) : '',
       });
       setOpenCards([]);
+      void sendEnquiry({
+        mobile, tripType: tab === 'round' ? 'ROUND_TRIP' : tab === 'package' ? 'PACKAGE' : 'ONE_WAY',
+        from: q.from, to: tab === 'package' ? '' : q.to, pickupDate: date, pickupTime: time,
+        returnDate: tab === 'round' ? returnDate : undefined, packageHours: tab === 'package' ? packageHours : undefined,
+        distanceKm: tab === 'package' ? undefined : q.distanceKm,
+        fares: q.quotes.map((x) => ({ vehicle: x.vehicle, total: x.total })),
+      });
     } catch (err) {
       setQuoteError((err instanceof ApiFailure && err.message) || 'We could not price this trip. Please try again.');
     } finally {
@@ -259,6 +268,11 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
                     <div className="field">
                       <label className="req" htmlFor="time">Pick up time</label>
                       <input id="time" name="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+                    </div>
+                    <div className="field">
+                      <label className="req" htmlFor="enq-mobile">Mobile number</label>
+                      <input id="enq-mobile" name="mobile" type="tel" inputMode="numeric" maxLength={10} placeholder="10 digit mobile number" autoComplete="tel-national"
+                        value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))} />
                     </div>
                     {trip === 'round' && (
                       <div className="field">

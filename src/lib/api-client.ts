@@ -48,3 +48,6 @@ export async function adminRequest<T>(token: string, path: string, method = 'GET
   }
   return request<T>(`/api/admin${path}`, { method, headers, body: payload });
 }
+
+/** Tells the office about an Explore cabs search with the customer's mobile number. Failures are ignored. */
+export const sendEnquiry = (body: Record<string, unknown>) => request('/api/enquiries', json(body)).catch(() => null);
