@@ -19,7 +19,11 @@ export const MIN_KM = 0.5;
 export const MAX_ROUND_TRIP_DAYS = 30;
 export const PACKAGE_OFF_MESSAGE = 'Sorry for the inconvenience, for now this service is not available.';
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+const PRODUCTION_URL = 'https://www.247droptaxi.com';
+const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() ?? '';
+// In a production build a missing or localhost value would put localhost links in the sitemap, canonicals and emails
+const useConfigured = configuredUrl && !(process.env.NODE_ENV === 'production' && /localhost|127\.0\.0\.1/.test(configuredUrl));
+export const siteUrl = (useConfigured ? configuredUrl : process.env.NODE_ENV === 'production' ? PRODUCTION_URL : 'http://localhost:3000').replace(/\/$/, '');
 export const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '247droptaxii@gmail.com';
 export const businessAddress = process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || 'Your business address, City, State';
 export const SITE_NAME = 'droptaxi.com';
