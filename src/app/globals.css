@@ -479,3 +479,11 @@ main { min-height: 60vh; }
 .book-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4, 5, 9, 0.5), rgba(4, 5, 9, 0.65)); }
 .book-page { width: calc(100% - 24px); margin: 28px auto; padding: 28px 24px; background: rgba(255, 255, 255, 0.95); border-radius: 18px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); }
 @media (max-width: 560px) { .book-page { padding: 20px 16px; margin: 16px auto; } }
+
+/* route page: about text and FAQ */
+.route-about, .route-faq { margin: 24px 0; }
+.route-about p { line-height: 1.6; }
+.route-faq details { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+.route-faq summary { cursor: pointer; font-weight: 600; }
+.route-faq details p { margin: 8px 0 0; }
+.route-links { margin: 16px 0; }

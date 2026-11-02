@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { RouteVehicles } from '@/components/RouteVehicles';
+import { RouteDetails } from '@/components/RouteDetails';
+import { buildRouteText } from '@/lib/route-content';
 import { JsonLd, pageMeta } from '@/lib/seo';
 import { routePage } from '@/lib/trips';
-import { tariff } from '@/lib/catalog';
+import { tariff, citiesOfRouteSlug } from '@/lib/catalog';
 import { ApiError } from '@/lib/http';
 import { siteUrl } from '@/lib/config';
 import { formatDuration } from '@/lib/format';
@@ -37,8 +39,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function RoutePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [r, t] = await Promise.all([load(slug), tariff()]);
+  const [r, t, pair] = await Promise.all([load(slug), tariff(), citiesOfRouteSlug(slug)]);
   if (!r) notFound();
+  const text = pair ? buildRouteText({
+    from: r.from, to: r.to, fromSlug: pair[0].slug, toSlug: pair[1].slug, distanceKm: r.distanceKm, durationMinutes: r.durationMinutes,
+    highway: r.highway, tollPlazas: r.tollPlazas, quotes: r.quotes, gst: t.gstEnabled,
+    fromDetails: pair[0].details, toDetails: pair[1].details, toSpots: Array.isArray(pair[1].popular_spots) ? pair[1].popular_spots : [],
+  }) : null;
   const prices = r.quotes.map((q) => q.total);
   const url = `${siteUrl}/${r.slug}`;
   return (
@@ -56,6 +63,11 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
           areaServed: [r.from, r.to],
           ...(prices.length ? { offers: { '@type': 'AggregateOffer', priceCurrency: 'INR', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length } } : {}),
         },
+        ...(text ? [{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: text.faqs.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+        }] : []),
         {
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
@@ -66,7 +78,7 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
         },
       ]} />
       <h1>{r.from} to {r.to} One Way Drop Taxi</h1>
-      {r.summary && <p>{r.summary}</p>}
+      {r.summary && !/^placeholder/i.test(r.summary) && <p>{r.summary}</p>}
       <ul className="facts">
         <li><strong>Distance</strong>{r.distanceKm} km</li>
         <li><strong>Travel time</strong>{formatDuration(r.durationMinutes)}</li>
@@ -78,6 +90,7 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
         <p className="note city-note">Due to a problem in Google Maps, the kms may be higher. Please contact the office for the exact price range. Thank you.</p>
       )}
       <p className="note">Total includes driver batta{t.gstEnabled ? ' and GST' : ''}. Toll and permit charges are extra, paid as per actuals.</p>
+      {text && pair && <RouteDetails text={text} from={r.from} to={r.to} fromSlug={pair[0].slug} toSlug={pair[1].slug} />}
       <p><Link href="/">Check another route</Link></p>
     </div>
     </>
