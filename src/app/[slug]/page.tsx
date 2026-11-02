@@ -9,7 +9,7 @@ import { routePage } from '@/lib/trips';
 import { tariff, citiesOfRouteSlug } from '@/lib/catalog';
 import { ApiError } from '@/lib/http';
 import { siteUrl } from '@/lib/config';
-import { formatDuration } from '@/lib/format';
+import { formatDuration, inr } from '@/lib/format';
 import type { RouteResponse } from '@/lib/types';
 
 // Matches clean URLs such as /chennai-to-coimbatore-taxi; anything else is a 404
@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const r = await load(slug);
   if (!r) return pageMeta({ title: 'Route not found | droptaxi.com', description: 'Route not found.', path: '/', indexable: false });
   return pageMeta({
-    title: `${r.from} to ${r.to} One Way Drop Taxi - Fare, Distance & Booking | droptaxi.com`,
-    description: `Book a one way drop taxi from ${r.from} to ${r.to}. Distance ${r.distanceKm} km, about ${formatDuration(r.durationMinutes)}. See fares for every car type.`,
+    title: `${r.from} to ${r.to} Drop Taxi - One Way Fare${r.quotes.length ? ` from ${inr(Math.min(...r.quotes.map((q) => q.total)))}` : ""} & Booking | droptaxi.com`,
+    description: `Book a ${r.from} to ${r.to} drop taxi (one way). Distance ${r.distanceKm} km, about ${formatDuration(r.durationMinutes)}. See fares for every car type.`,
     path: `/${r.slug}`,
     indexable: r.indexable,
   });

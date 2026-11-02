@@ -40,7 +40,7 @@ export function buildRouteText(i: RouteTextInput): RouteText {
   const paragraphs: string[] = [];
   paragraphs.push(
     kind === 'short'
-      ? `${from} to ${to} is a short drive of about ${km} km, which takes around ${time} depending on traffic. A one way drop taxi suits this trip when you want a door to door ride without arranging a return.`
+      ? `${from} to ${to} is a short drive of about ${km} km, which takes around ${time} depending on traffic. A ${from} to ${to} drop taxi suits this trip when you want a door to door ride without arranging a return.`
       : kind === 'medium'
         ? `The road from ${from} to ${to} covers about ${km} km and usually takes ${time}. With a one way drop taxi you pay only for the ${from} to ${to} direction, and the driver returns on their own.`
         : `${from} to ${to} is a long trip of about ${km} km, around ${time} on the road. For a drive this length a one way drop taxi saves you from paying for the driver's empty return, and you can plan a comfortable break on the way.`,
@@ -59,12 +59,12 @@ export function buildRouteText(i: RouteTextInput): RouteText {
   if (i.toDetails) paragraphs.push(`About ${to}: ${i.toDetails}`);
 
   const faqs: Faq[] = [
-    { question: `What is the distance from ${from} to ${to}?`, answer: `The road distance from ${from} to ${to} is about ${km} km.` },
+    { question: `What is the distance from ${from} to ${to}?`, answer: `For your ${from} to ${to} drop taxi, the road distance is about ${km} km.` },
     { question: `How long does it take to travel from ${from} to ${to} by taxi?`, answer: `The drive usually takes about ${time}. Traffic, weather and rest stops can change this.` },
   ];
   if (range) {
     faqs.push({
-      question: `What is the one way taxi fare from ${from} to ${to}?`,
+      question: `What is the ${from} to ${to} drop taxi fare?`,
       answer: `The fare is ${range} depending on the car. It includes driver batta${i.gst ? ' and GST' : ''}. Toll and permit charges are extra and paid as per actuals.`,
     });
   }
@@ -74,7 +74,7 @@ export function buildRouteText(i: RouteTextInput): RouteText {
   if (cars) faqs.push({ question: `Which cars can I book from ${from} to ${to}?`, answer: `You can choose from ${cars}. The total for each is shown on this page.` });
   faqs.push(
     { question: `Can I book a round trip or a package from ${from}?`, answer: `Yes. Choose Round Trip or Package on the home page, enter ${from} as the pickup and you will see the fare for each car before you book.` },
-    { question: `How do I book a taxi from ${from} to ${to}?`, answer: `Pick a car above and press Book now, then enter your name, mobile number, pickup date, time and address. We will contact you on your mobile number to confirm the trip.` },
+    { question: `How do I book a drop taxi from ${from} to ${to}?`, answer: `Pick a car above and press Book now, then enter your name, mobile number, pickup date, time and address. We will contact you on your mobile number to confirm the trip.` },
   );
   return { paragraphs, spots: i.toSpots, faqs };
 }
