@@ -2,6 +2,7 @@
 // distance and with what is known about the route, so pages are not word-for-word copies of each other.
 import { formatDuration, inr } from './format';
 import type { Faq, FareQuote } from './types';
+import { routeOverride } from './route-overrides';
 
 export interface RouteTextInput {
   from: string;
@@ -37,6 +38,7 @@ export function buildRouteText(i: RouteTextInput): RouteText {
   const cars = list(i.quotes.map((q) => `${q.vehicle} (${q.seats} seater)`));
   const kind = km < 150 ? 'short' : km < 350 ? 'medium' : 'long';
 
+  const extra = routeOverride(i.fromSlug, i.toSlug, from, to);
   const paragraphs: string[] = [];
   paragraphs.push(
     kind === 'short'
@@ -45,11 +47,12 @@ export function buildRouteText(i: RouteTextInput): RouteText {
         ? `The road from ${from} to ${to} covers about ${km} km and usually takes ${time}. With a one way drop taxi you pay only for the ${from} to ${to} direction, and the driver returns on their own.`
         : `${from} to ${to} is a long trip of about ${km} km, around ${time} on the road. For a drive this length a one way drop taxi saves you from paying for the driver's empty return, and you can plan a comfortable break on the way.`,
   );
-  if (i.highway) {
+  if (extra) paragraphs.push(...extra.paragraphs, 'Toll and permit charges are not part of the fare and are paid as per actuals.');
+  if (i.highway && !extra) {
     paragraphs.push(
       `The usual route follows ${i.highway}${i.tollPlazas > 0 ? ` and passes about ${i.tollPlazas} toll plaza${i.tollPlazas === 1 ? '' : 's'}` : ''}. Toll and permit charges are not part of the fare and are paid as per actuals.`,
     );
-  } else {
+  } else if (!extra) {
     paragraphs.push(`Toll and permit charges, where they apply on the way, are not part of the fare and are paid as per actuals. The distance shown is the road distance for the usual route.`);
   }
   if (range) {
@@ -68,6 +71,7 @@ export function buildRouteText(i: RouteTextInput): RouteText {
       answer: `The fare is ${range} depending on the car. It includes driver batta${i.gst ? ' and GST' : ''}. Toll and permit charges are extra and paid as per actuals.`,
     });
   }
+  if (extra) faqs.push(extra.faq);
   faqs.push(
     { question: `Are toll and permit charges included in the ${from} to ${to} fare?`, answer: `No. Toll gates, state permits and hill station charges are extra and paid as per actuals during the trip.` },
   );
