@@ -81,7 +81,7 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 .hero > .wrap { width: 100%; }.hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.07); border-radius: 999px; font-size: 0.84rem; font-weight: 600; color: #f1f2f5; }
 .hero-badge b { color: var(--primary); }
-.hero h1 { font-size: clamp(2.3rem, 4.3vw, 3.5rem); line-height: 1.04; font-weight: 800; letter-spacing: -1.5px; margin: 22px 0 18px; }
+.hero h1 { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; font-size: clamp(2.3rem, 4.3vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.5px; margin: 22px 0 18px; }
 .hl { color: var(--primary); font-weight: 800; }
 
 /* Search panel: wide dark glass bar under the hero text, segmented tabs, underlined fields, "Explore cabs" pill on the bottom edge */
@@ -133,7 +133,7 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; }
 /* generic sections */
 .section { padding: 36px 0; }
 .section.alt { background: #fff; }
-.section-title { text-align: center; margin: 0 0 24px; font-size: 1.6rem; }
+.section-title { text-align: center; margin: 0 0 24px; font-size: 1.75rem; font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; font-weight: 700; }
 .section-title::after { content: ''; display: block; width: 56px; height: 4px; background: var(--primary); border-radius: 4px; margin: 8px auto 0; }
 .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .tile { background: #fff; border: 1px solid #eceff3; border-radius: 16px; padding: 20px; box-shadow: 0 4px 18px rgba(16, 24, 40, 0.06); transition: transform 0.2s, box-shadow 0.2s; }
