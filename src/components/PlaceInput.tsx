@@ -103,6 +103,7 @@ export function PlaceInput({ inputId, label, placeholder = 'Enter min 3 char to 
           </ul>
         )}
       </div>
+      <p className="place-hint">Start typing (min 3 letters)</p>
     </div>
   );
 }
