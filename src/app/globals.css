@@ -455,7 +455,8 @@ textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--prima
 
 /* Mandatory fields are marked with a red asterisk */
 .req::after { content: ' *'; color: #dc2626; font-weight: 800; }
-.widget label.req::after { content: '*'; margin-left: -4px; }
+.widget label.req::after { content: '*'; margin-left: 4px; }
+.place-hint { margin: 5px 0 0; font-size: 0.72rem; line-height: 1.3; color: rgba(255, 255, 255, 0.6); }
 .req-hint { margin: 0 0 4px; text-align: right; }
 .req-mark { color: #dc2626; font-weight: 800; }
 
