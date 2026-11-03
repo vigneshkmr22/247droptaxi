@@ -344,14 +344,31 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
         </section>
       ) : null}
 
-      <section className="section">
+      <section className="section why">
         <div className="wrap">
           <h2 className="section-title">Why book with us</h2>
-          <div className="grid">
-            <div className="tile"><span className="icon" aria-hidden="true">🛣️</span><h3>Pay one way only</h3><p>You are charged for the trip you take, not for the driver&apos;s return.</p></div>
-            <div className="tile"><span className="icon" aria-hidden="true">🧾</span><h3>Fare before you book</h3><p>See the total for every car type on the route page before you commit.</p></div>
-            <div className="tile"><span className="icon" aria-hidden="true">💰</span><h3>Inclusive pricing</h3><p>Driver batta{gstOn ? ' and GST' : ''} {gstOn ? 'are' : 'is'} in the total shown. Tolls and permit fees are extra, as per actuals.</p></div>
-            <div className="tile"><span className="icon" aria-hidden="true">🚗</span><h3>Choose your car</h3><p>Pick the vehicle that fits your group and luggage from the published tariff.</p></div>
+          <p className="why-lead">Honest fares and a comfortable ride, from pickup to drop.</p>
+          <div className="why-grid">
+            <div className="why-card">
+              <span className="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.2" /><circle cx="18" cy="6" r="2.2" /><path d="M8 18h6.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 1 0-7H16" /></svg></span>
+              <h3>Pay one way only</h3>
+              <p>You are charged for the trip you take, not for the driver&apos;s return.</p>
+            </div>
+            <div className="why-card">
+              <span className="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" /><path d="M9 8h6M9 12h6" /></svg></span>
+              <h3>Fare before you book</h3>
+              <p>See the total for every car type on the route page before you commit.</p>
+            </div>
+            <div className="why-card">
+              <span className="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 5h10M7 9h10M10 5c4 0 6 1.5 6 4s-2 4-6 4H7l8 6" /></svg></span>
+              <h3>Inclusive pricing</h3>
+              <p>Driver batta{gstOn ? ' and GST' : ''} {gstOn ? 'are' : 'is'} in the total shown. Tolls and permit fees are extra, as per actuals.</p>
+            </div>
+            <div className="why-card">
+              <span className="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 15v-3l2-5h14l2 5v3" /><path d="M3 15h18v3H3z" /><circle cx="7.5" cy="18" r="1.6" /><circle cx="16.5" cy="18" r="1.6" /></svg></span>
+              <h3>Choose your car</h3>
+              <p>Pick the vehicle that fits your group and luggage from the published tariff.</p>
+            </div>
           </div>
         </div>
       </section>
