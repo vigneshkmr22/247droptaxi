@@ -505,3 +505,13 @@ main { min-height: 60vh; }
 .route-faq summary { cursor: pointer; font-weight: 600; }
 .route-faq details p { margin: 8px 0 0; }
 .route-links { margin: 16px 0; }
+
+/* Scrolling message under the header: gold bar, text repeats and loops; static centred text for reduced motion */
+.ticker { position: relative; overflow: hidden; background: linear-gradient(90deg, #f5a90f, #fbc531 50%, #f5a90f); color: #111; border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
+.ticker-static { display: none; margin: 0; padding: 7px 16px; text-align: center; font-size: 0.86rem; font-weight: 700; }
+.ticker-track { display: flex; width: max-content; padding: 7px 0; animation: ticker-scroll 16s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker-item { flex: none; padding: 0 28px; white-space: nowrap; font-size: 0.86rem; font-weight: 700; letter-spacing: 0.2px; }
+.ticker-item b { margin-right: 8px; color: #7a4b00; }
+@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-12.5%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { display: none; } .ticker-static { display: block; } }
