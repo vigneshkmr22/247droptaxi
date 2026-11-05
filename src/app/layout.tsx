@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { SiteHeader } from '@/components/SiteHeader';
+import { TickerBar } from '@/components/TickerBar';
 import { FabStack, SiteFooter } from '@/components/SiteFooter';
 import { ScrollTop } from '@/components/ScrollTop';
 import { getSettings } from '@/lib/settings';
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <SiteHeader phone={supportPhone} />
+        <TickerBar />
         <main>{children}</main>
         <SiteFooter phone={supportPhone} />
         <ScrollTop />
