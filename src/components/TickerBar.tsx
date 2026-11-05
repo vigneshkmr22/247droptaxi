@@ -1,4 +1,4 @@
-const MESSAGE = 'You are in the best droptaxi. Book and save your money';
+const MESSAGE = 'Pay only for your one way trip. Book now and save money.';
 
 /** Slim scrolling message under the header. The text is repeated so the loop has no gap; the copies are hidden from screen readers. */
 export function TickerBar() {
