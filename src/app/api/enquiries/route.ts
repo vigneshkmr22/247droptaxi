@@ -3,7 +3,7 @@ import { api, ApiError, clientIp, rateLimit, readJson } from '@/lib/http';
 import { sendEnquiryNotification } from '@/lib/notify';
 
 interface Body {
-  mobile?: string; tripType?: string; from?: string; to?: string; pickupDate?: string; pickupTime?: string;
+  name?: string; mobile?: string; tripType?: string; from?: string; to?: string; pickupDate?: string; pickupTime?: string;
   returnDate?: string; packageHours?: number; distanceKm?: number; fares?: { vehicle?: string; total?: number }[];
 }
 
@@ -20,7 +20,7 @@ export const POST = api(async (req) => {
   const time = text(b.pickupTime, 5);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) throw new ApiError(400, 'Invalid pickup date or time.');
   const alert = {
-    mobile, tripType, from: text(b.from), to: text(b.to), pickupDate: date, pickupTime: time,
+    name: text(b.name, 100), mobile, tripType, from: text(b.from), to: text(b.to), pickupDate: date, pickupTime: time,
     returnDate: tripType === 'ROUND_TRIP' ? text(b.returnDate, 10) || null : null,
     packageHours: tripType === 'PACKAGE' && Number(b.packageHours) > 0 ? Number(b.packageHours) : null,
     distanceKm: Number(b.distanceKm) > 0 ? Number(b.distanceKm) : null,

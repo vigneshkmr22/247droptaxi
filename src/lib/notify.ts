@@ -132,6 +132,7 @@ export async function sendBookingNotifications(b: BookingAlert): Promise<void> {
 }
 
 export interface EnquiryAlert {
+  name?: string;
   mobile: string;
   tripType: string;
   from: string;
@@ -150,6 +151,7 @@ export async function sendEnquiryNotification(e: EnquiryAlert): Promise<void> {
   const officeTo = (process.env.BOOKING_ALERT_EMAIL ?? '').split(',').map((s) => s.trim()).filter(Boolean);
   if (officeTo.length === 0) officeTo.push(OFFICE_EMAIL);
   const rows: [string, string][] = [
+    ...(e.name ? [['Name', e.name] as [string, string]] : []),
     ['Phone', e.mobile],
     ['Pickup Location', e.from],
     ['Drop Location', e.to || '-'],
