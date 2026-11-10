@@ -2,7 +2,7 @@ import { pageMeta } from '@/lib/seo';
 import { sharedFaqs } from '@/lib/catalog';
 
 export const metadata = pageMeta({
-  title: 'FAQ - One Way Drop Taxi | droptaxi.com',
+  title: 'FAQ - One Way Drop Taxi | 247 Drop Taxi',
   description: 'Answers to common questions about one way drop taxi fares, inclusions and cancellations.',
   path: '/faq',
 });

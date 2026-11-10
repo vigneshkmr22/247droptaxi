@@ -3,7 +3,7 @@ import { pageMeta } from '@/lib/seo';
 import { activeCities } from '@/lib/catalog';
 
 export const metadata = pageMeta({
-  title: 'Cities We Serve - One Way Drop Taxi | droptaxi.com',
+  title: 'Cities We Serve - Drop Taxi & Outstation Cabs | 247 Drop Taxi',
   description: 'Cities we serve in Tamil Nadu, Bangalore and Pondicherry with popular places to visit and one way drop taxi routes.',
   path: '/major-cities',
 });

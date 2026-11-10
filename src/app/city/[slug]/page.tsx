@@ -21,10 +21,10 @@ async function load(slug: string): Promise<CityDetail | null> {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const c = await load((await params).slug);
-  if (!c) return pageMeta({ title: 'City not found | droptaxi.com', description: 'City not found.', path: '/major-cities', indexable: false });
-  const description = `${c.description ?? `${c.name} in ${c.state}.`} One way drop taxi routes, fares and popular places in ${c.name}.`;
+  if (!c) return pageMeta({ title: 'City not found | 247 Drop Taxi', description: 'City not found.', path: '/major-cities', indexable: false });
+  const description = `${c.description ?? `${c.name} in ${c.state}.`} One way drop taxi and outstation cab routes, fares and popular places in ${c.name}.`;
   return pageMeta({
-    title: `${c.name} Drop Taxi - One Way Routes, Fares & Places to Visit | droptaxi.com`,
+    title: `${c.name} Drop Taxi & Outstation Cabs - One Way Fares & Routes | 247 Drop Taxi`,
     description: description.length > 300 ? description.slice(0, 297) + '...' : description,
     path: `/city/${c.slug}`,
   });
@@ -86,7 +86,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         </>
       )}
 
-      <h2>One way drop taxi from {c.name}</h2>
+      <h2>One way drop taxi and outstation cabs from {c.name}</h2>
       {c.routes.length ? (
         <>
           <p className="note">Choose a drop city to see the fare for every car.{c.routes.some((r) => r.estimated) && <span> Fares marked ~ are estimates until you open the route.</span>}</p>

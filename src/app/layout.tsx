@@ -12,8 +12,9 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'droptaxi.com',
-  description: 'One way drop taxis across Tamil Nadu, Bangalore and Pondicherry.',
+  title: '247 Drop Taxi',
+  description: 'One way drop taxis and outstation cabs across Tamil Nadu, Bangalore and Pondicherry.',
+  openGraph: { siteName: '247 Drop Taxi', type: 'website', locale: 'en_IN' },
 };
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#0a0b0e' };

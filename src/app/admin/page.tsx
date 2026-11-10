@@ -3,7 +3,7 @@ import { pageMeta } from '@/lib/seo';
 import { activeCities } from '@/lib/catalog';
 import { fareConfig } from '@/lib/config';
 
-export const metadata = pageMeta({ title: 'Admin | droptaxi.com', description: 'Staff admin.', path: '/admin', indexable: false });
+export const metadata = pageMeta({ title: 'Admin | 247 Drop Taxi', description: 'Staff admin.', path: '/admin', indexable: false });
 
 export default async function AdminPage() {
   // A brand-new database has no tables yet: still render the sign-in so the admin can run the first-time setup.

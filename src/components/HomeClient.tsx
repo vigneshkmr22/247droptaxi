@@ -223,9 +223,9 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
         </div>
         <div className="wrap hero-grid">
           <div className="hero-copy">
-            <span className="hero-badge"><b>★</b> Top ranked droptaxi service in south India</span>
-            <h1>Services Across <span className="hl">South India</span></h1>
-            <p className="hero-lead">Reliable one way and round trip taxis across Tamil Nadu, Pondicherry and Bangalore. Professional drivers, transparent pricing and a comfortable ride.</p>
+            <span className="hero-badge"><b>★</b> Since 2020 · 50+ cars · 200+ cities</span>
+            <h1>Drop Taxi &amp; Outstation Cabs Across <span className="hl">South India</span></h1>
+            <p className="hero-lead">Reliable one way drop taxis, outstation cabs and round trips across Tamil Nadu, Pondicherry and Bangalore. Professional drivers, transparent pricing and a comfortable ride.</p>
           </div>
 
           <div className="widget card">

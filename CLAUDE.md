@@ -35,5 +35,5 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Vercel needs: `DATABASE_URL` (Neon, added from Storage), `BLOB_READ_WRITE_TOKEN` (Blob store), `ADMIN_TOKEN`, `NEXT_PUBLIC_SITE_URL`, and optionally `GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_SUPPORT_EMAIL`, `NEXT_PUBLIC_BUSINESS_ADDRESS`, `RESEND_API_KEY`, `BOOKING_ALERT_EMAIL`. Changing an environment variable only takes effect after a redeploy. `vercel.json` pins functions to `sin1`, which should match the Neon region.
 - `cab/` (gitignored) only holds the original car photos; the app serves the copies in `public/media/vehicles`.
 - `PROJECT_GUIDE.md` is a search-by-keyword map of where to change fonts, logo, phones, colours, GST and so on. `ANDROID_APP_PLAN.md` is a not-started plan; nothing in the site depends on it.
-- Policy, about and service text in `src/lib/content.ts` is placeholder wording.
+- The brand is `SITE_NAME` ("247 Drop Taxi"), run by `OPERATOR_NAME` (Geodest Tours and Travels Group); both, the office address and the Maps link are in `lib/config.ts`. In `src/lib/content.ts` the about and service text is real, but the terms, cancellation and refund wording is still general placeholder text.
 - Git has no global identity on this machine; commit with `git -c user.name=... -c user.email=...` or set one first.

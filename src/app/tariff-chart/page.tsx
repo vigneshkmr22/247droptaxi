@@ -3,7 +3,7 @@ import { tariff } from '@/lib/catalog';
 import { inr, num } from '@/lib/format';
 
 export const metadata = pageMeta({
-  title: 'One Way Drop Taxi Tariff - Rate per km | droptaxi.com',
+  title: 'Drop Taxi & Outstation Cab Tariff - Rate per km | 247 Drop Taxi',
   description: 'Rate per km for every car type, minimum billed distance, driver allowance and GST for one way drop taxi trips.',
   path: '/tariff-chart',
 });

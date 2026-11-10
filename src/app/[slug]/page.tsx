@@ -28,10 +28,10 @@ async function load(slug: string): Promise<RouteResponse | null> {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const r = await load(slug);
-  if (!r) return pageMeta({ title: 'Route not found | droptaxi.com', description: 'Route not found.', path: '/', indexable: false });
+  if (!r) return pageMeta({ title: 'Route not found | 247 Drop Taxi', description: 'Route not found.', path: '/', indexable: false });
   return pageMeta({
-    title: `${r.from} to ${r.to} Drop Taxi - One Way Fare${r.quotes.length ? ` from ${inr(Math.min(...r.quotes.map((q) => q.total)))}` : ""} & Booking | droptaxi.com`,
-    description: `Book a ${r.from} to ${r.to} drop taxi (one way). Distance ${r.distanceKm} km, about ${formatDuration(r.durationMinutes)}. See fares for every car type.`,
+    title: `${r.from} to ${r.to} Drop Taxi - One Way Cab Fare${r.quotes.length ? ` from ${inr(Math.min(...r.quotes.map((q) => q.total)))}` : ""} & Booking | 247 Drop Taxi`,
+    description: `Book a ${r.from} to ${r.to} drop taxi or one way outstation cab. Distance ${r.distanceKm} km, about ${formatDuration(r.durationMinutes)}. See fares for every car type.`,
     path: `/${r.slug}`,
     indexable: r.indexable,
   });
@@ -59,7 +59,7 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
           name: `${r.from} to ${r.to} one way drop taxi`,
           serviceType: 'One way taxi',
           url,
-          provider: { '@type': 'Organization', name: 'droptaxi.com', url: siteUrl },
+          provider: { '@type': 'TaxiService', '@id': `${siteUrl}/#business`, name: '247 Drop Taxi', url: siteUrl },
           areaServed: [r.from, r.to],
           ...(prices.length ? { offers: { '@type': 'AggregateOffer', priceCurrency: 'INR', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length } } : {}),
         },
@@ -84,7 +84,7 @@ export default async function RoutePage({ params }: { params: Promise<{ slug: st
         <li><strong>Travel time</strong>{formatDuration(r.durationMinutes)}</li>
         {r.highway && <li><strong>Highway</strong>{r.highway}</li>}
       </ul>
-      <h2>Choose your vehicle: {r.from} to {r.to}</h2>
+      <h2>Choose your cab: {r.from} to {r.to}</h2>
       <RouteVehicles route={r} gst={t.gstEnabled} />
       {r.estimated && (
         <p className="note city-note">Due to a problem in Google Maps, the kms may be higher. Please contact the office for the exact price range. Thank you.</p>
