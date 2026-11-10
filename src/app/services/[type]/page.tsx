@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { pageMeta } from '@/lib/seo';
 import { SERVICES } from '@/lib/content';
 import { getSettings } from '@/lib/settings';
@@ -20,15 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
 export default async function ServicePage({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
   const info = find(type);
+  if (!info) notFound(); // a real 404, not a 200 page that says "not found"
   const { whatsappNumber } = await getSettings();
-  if (!info) {
-    return (
-      <div className="page-narrow">
-        <h1>Service not found</h1>
-        <p><Link href="/">Back to home</Link></p>
-      </div>
-    );
-  }
   const whatsapp = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi, I would like a quote for a ${info.name.toLowerCase()}.`)}`;
   return (
     <div className="page-narrow">
