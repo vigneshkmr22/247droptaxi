@@ -32,7 +32,7 @@ export function RouteVehicles({ route: r, gst }: { route: RouteResponse; gst: bo
                 <button type="button" className="vehicle-details-btn" aria-expanded={isOpen} aria-controls={`split-${q.vehicleId}`} onClick={() => toggle(q.vehicleId)}>
                   {isOpen ? 'Hide details' : 'Show details'}
                 </button>
-                <Link className="btn" href={{ pathname: '/book', query: { route: r.slug, vehicle: q.vehicleId } }}>Book now</Link>
+                <Link className="btn" rel="nofollow" href={{ pathname: '/book', query: { route: r.slug, vehicle: q.vehicleId } }}>Book now</Link>
               </div>
             </div>
             {isOpen && (

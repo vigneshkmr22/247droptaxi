@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { CityGallery } from '@/components/CityGallery';
 import { JsonLd, pageMeta } from '@/lib/seo';
 import { cityDetail } from '@/lib/catalog';
@@ -31,14 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CityPage({ params }: { params: Promise<{ slug: string }> }) {
   const c = await load((await params).slug);
-  if (!c) {
-    return (
-      <div className="page-city">
-        <h1>City not found</h1>
-        <p>We could not find this city. <Link href="/major-cities">See all cities we serve</Link>.</p>
-      </div>
-    );
-  }
+  if (!c) notFound(); // a real 404, so search engines drop the URL instead of seeing a soft 404
   const { whatsappNumber } = await getSettings();
   const url = `${siteUrl}/city/${c.slug}`;
   const whatsapp = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi, I would like a quote for a one way drop taxi from ${c.name}.`)}`;
