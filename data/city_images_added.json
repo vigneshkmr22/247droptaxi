@@ -1,5 +1,8 @@
 [
   { "city_slug": "auroville", "file_name": "b7c1f0a2d94e4c6f8a3e5d1c9b2f7a61.jpg", "sort_order": -1 },
   { "city_slug": "bangalore", "file_name": "c2d8e4f6a1b34957836f0e2d4c6a8b13.jpg", "sort_order": -1 },
-  { "city_slug": "bhavani", "file_name": "d3e9f5a7b2c44a68947a1f3e5d7b9c24.jpg", "sort_order": -1 }
+  { "city_slug": "bhavani", "file_name": "d3e9f5a7b2c44a68947a1f3e5d7b9c24.jpg", "sort_order": -1 },
+  { "city_slug": "chengalpattu", "file_name": "e4f0a6b8c3d55b79a58b2a4f6e8c0d35.jpg", "sort_order": -1 },
+  { "city_slug": "cumbum", "file_name": "f5a1b7c9d4e66c80b69c3b5a7f9d1e46.jpg", "sort_order": -1 },
+  { "city_slug": "nagercoil", "file_name": "a6b2c8d0e5f77d91c70d4c6b8a0e2f57.jpg", "sort_order": -1 }
 ]
