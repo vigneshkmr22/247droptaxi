@@ -25,5 +25,12 @@ const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() ?? '';
 const useConfigured = configuredUrl && !(process.env.NODE_ENV === 'production' && /localhost|127\.0\.0\.1/.test(configuredUrl));
 export const siteUrl = (useConfigured ? configuredUrl : process.env.NODE_ENV === 'production' ? PRODUCTION_URL : 'http://localhost:3000').replace(/\/$/, '');
 export const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '247droptaxii@gmail.com';
-export const businessAddress = process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || 'Your business address, City, State';
-export const SITE_NAME = 'droptaxi.com';
+// The postal address, split so the structured data (JSON-LD) can use the parts
+export const businessPostal = { street: '1/501, Loganathan Nagar', locality: 'Vandalur', region: 'Tamil Nadu', postalCode: '600048' };
+export const businessAddress = process.env.NEXT_PUBLIC_BUSINESS_ADDRESS
+  || `${businessPostal.street}, ${businessPostal.locality}, ${businessPostal.region} ${businessPostal.postalCode}`;
+export const businessMapUrl = 'https://maps.app.goo.gl/bkS4ifR1kDgQtsZw8';
+// The brand shown in titles, the footer and structured data, and the company that runs it
+export const SITE_NAME = '247 Drop Taxi';
+export const OPERATOR_NAME = 'Geodest Tours and Travels Group';
+export const FOUNDED_YEAR = 2020;

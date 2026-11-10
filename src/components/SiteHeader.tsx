@@ -19,8 +19,8 @@ export function SiteHeader({ phone }: { phone: string }) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <Link href="/" className="brand" aria-label="droptaxi home">
-          <img className="brand-logo brand-logo-full" src="/logo-full.png" alt="247 droptaxi" width={86} height={50} />
+        <Link href="/" className="brand" aria-label="247 Drop Taxi home">
+          <img className="brand-logo brand-logo-full" src="/logo-full.png" alt="247 Drop Taxi" width={86} height={50} />
         </Link>
         <nav className={`site-nav${open ? ' open' : ''}`} id="site-nav" aria-label="Main" onClick={onNavClick}>
           <Link href="/" className={cls('/', true)}>Home</Link>

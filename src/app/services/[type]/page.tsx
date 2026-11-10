@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const { type } = await params;
   const info = find(type);
   return pageMeta({
-    title: `${info?.name ?? 'Service'} | droptaxi.com`,
-    description: info?.intro ?? 'Taxi services from droptaxi.com.',
+    title: `${info?.name ?? 'Service'} | 247 Drop Taxi`,
+    description: info?.intro ?? 'Taxi services from 247 Drop Taxi.',
     path: `/services/${type}`,
     indexable: !!info,
   });

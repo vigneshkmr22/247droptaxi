@@ -1,10 +1,10 @@
 import { pageMeta } from '@/lib/seo';
 import { getSettings } from '@/lib/settings';
-import { businessAddress, supportEmail } from '@/lib/config';
+import { OPERATOR_NAME, businessAddress, businessMapUrl, supportEmail } from '@/lib/config';
 
 export const metadata = pageMeta({
-  title: 'Contact us | droptaxi.com',
-  description: 'Phone, email and WhatsApp contact for droptaxi.com.',
+  title: 'Contact us | 247 Drop Taxi',
+  description: 'Call, WhatsApp or email 247 Drop Taxi to book a one way drop taxi or outstation cab. Office in Vandalur, Chennai, open 24x7.',
   path: '/contact',
 });
 
@@ -13,11 +13,12 @@ export default async function ContactPage() {
   return (
     <div className="page-narrow">
       <h1>Contact us</h1>
+      <p>247 Drop Taxi is run by {OPERATOR_NAME}. Call or message us at any hour to book a one way drop taxi or an outstation cab.</p>
       <ul>
         <li>Phone: <a href={`tel:${supportPhone}`}>{supportPhone}</a></li>
         <li>Email: <a href={`mailto:${supportEmail}`}>{supportEmail}</a></li>
         <li>WhatsApp: <a href={`https://wa.me/${whatsappNumber}`}>Message us</a></li>
-        <li>Address: {businessAddress}</li>
+        <li>Address: {businessAddress} (<a href={businessMapUrl} target="_blank" rel="noopener">view on Google Maps</a>)</li>
       </ul>
     </div>
   );

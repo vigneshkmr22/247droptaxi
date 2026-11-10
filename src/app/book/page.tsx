@@ -3,7 +3,7 @@ import { pageMeta } from '@/lib/seo';
 import { tariff } from '@/lib/catalog';
 
 export const metadata = pageMeta({
-  title: 'Book a One Way Drop Taxi | droptaxi.com',
+  title: 'Book a One Way Drop Taxi | 247 Drop Taxi',
   description: 'Book your one way drop taxi online.',
   path: '/book',
   indexable: false,
