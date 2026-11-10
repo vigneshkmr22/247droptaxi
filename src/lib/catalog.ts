@@ -95,7 +95,10 @@ export async function cheapestVehicleAndGst() {
   return { cheapest: vehicles[0] ?? null, gstRate: settings.gstEnabled ? fareConfig.gstRate : 0 };
 }
 
-/** Indexable routes only, each with the lowest total fare; feeds the home page and the sitemap. */
+/** Every stored route (both directions) is open to search engines; these slugs feed the sitemap. */
+export const storedRouteSlugs = () => query<{ slug: string }>('SELECT slug FROM routes ORDER BY slug');
+
+/** The featured routes (is_indexable, one direction per pair), each with the lowest total fare; feeds the home page list. */
 export async function indexableRoutes(): Promise<RouteItem[]> {
   const { cheapest, gstRate } = await cheapestVehicleAndGst();
   const rows = await query<RouteRow>(`${ROUTE_SELECT} WHERE r.is_indexable ORDER BY r.slug`);
@@ -142,7 +145,7 @@ export async function routeResponse(r: RouteRow): Promise<RouteResponse> {
   const vehicles = await activeVehicles();
   return {
     slug: r.slug, from: r.from_name, to: r.to_name, distanceKm: Number(r.distance_km), durationMinutes: Number(r.duration_minutes),
-    highway: r.highway, tollPlazas: Number(r.toll_plazas), summary: r.summary_text, indexable: r.is_indexable,
+    highway: r.highway, tollPlazas: Number(r.toll_plazas), summary: r.summary_text, indexable: true,
     quotes: vehicles.map((v) => quote(Number(r.distance_km), v, gstRate)), estimated: false,
   };
 }
