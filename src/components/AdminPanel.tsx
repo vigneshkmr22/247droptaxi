@@ -92,7 +92,7 @@ export function AdminPanel({ routeCities, packages }: { routeCities: { slug: str
     }
   }
 
-  /** First-time setup for a new database: creates the tables and fills only empty ones (same as POST /api/admin/seed). */
+  /** Setup: creates the tables, fills only empty ones and adds newly bundled city photos (same as POST /api/admin/seed). Safe to run again. */
   async function setupDatabase() {
     setBusy(true);
     setError('');
@@ -347,8 +347,8 @@ export function AdminPanel({ routeCities, packages }: { routeCities: { slug: str
           <label htmlFor="token">Admin token</label>
           <input id="token" name="token" type="password" autoComplete="off" required value={token} onChange={(e) => setToken(e.target.value)} />
           <button className="btn" type="submit" disabled={busy || !token}>{busy ? 'Signing in…' : 'Sign in'}</button>
-          <button className="btn" type="button" disabled={busy || !token} onClick={setupDatabase}>Set up database (first time only)</button>
-          <p className="note">Run this once on a new site, before signing in. It only fills empty tables and never overwrites existing data.</p>
+          <button className="btn" type="button" disabled={busy || !token} onClick={setupDatabase}>Set up database / add new bundled photos</button>
+          <p className="note">Run this once on a new site, before signing in. It only fills empty tables and adds newly bundled city photos; it never overwrites existing data.</p>
           {setupMsg && <p className="note" role="status">{setupMsg}</p>}
           {error && <p className="error" role="alert">{error}</p>}
         </form>
