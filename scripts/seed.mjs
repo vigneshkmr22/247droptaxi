@@ -96,5 +96,15 @@ await load('app_settings', 'settings', `
 for (const [table, col] of [['cities', 'id'], ['vehicle_types', 'id'], ['routes', 'id'], ['city_images', 'id'], ['route_faqs', 'id']]) {
   await db.query(`SELECT setval(pg_get_serial_sequence('${table}', '${col}'), COALESCE((SELECT max(${col}) FROM ${table}), 1))`);
 }
+
+// Bundled photos added after launch: inserted when the file is not in city_images yet and the city has fewer than 3 photos
+const added = await db.query(`INSERT INTO city_images (city_id, file_name, sort_order)
+  SELECT c.id, x.file_name, COALESCE(x.sort_order, 0)
+  FROM jsonb_to_recordset($1::jsonb) AS x(city_slug text, file_name text, sort_order int)
+  JOIN cities c ON c.slug = x.city_slug
+  WHERE NOT EXISTS (SELECT 1 FROM city_images i WHERE i.file_name = x.file_name)
+    AND (SELECT count(*) FROM city_images i WHERE i.city_id = c.id) < 3
+  RETURNING id`, [JSON.stringify(read('city_images_added'))]);
+console.log(`city_images: added ${added.length} new photos`);
 console.log('Done.');
 process.exit(0);

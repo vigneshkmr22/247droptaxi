@@ -5,6 +5,7 @@ import cities from '../../data/cities.json';
 import vehicles from '../../data/vehicles.json';
 import routes from '../../data/routes.json';
 import cityImages from '../../data/city_images.json';
+import addedCityImages from '../../data/city_images_added.json';
 import faqs from '../../data/faqs.json';
 import settings from '../../data/settings.json';
 
@@ -52,6 +53,8 @@ const LOADS: { table: string; rows: unknown[]; sql: string }[] = [
 /**
  * Creates any missing tables and fills the EMPTY ones with the starting data (cities, routes, vehicles, photos,
  * FAQs and settings). A table that already has rows is never touched, so running it again is harmless.
+ * The one exception is data/city_images_added.json: bundled photos added after launch, inserted when their file
+ * is not in city_images yet and the city has fewer than 3 photos. Existing rows are still never changed.
  */
 export async function seedDatabase(): Promise<Record<string, string>> {
   const statements = SCHEMA_SQL.replace(/--.*$/gm, '').split(';').map((s) => s.trim()).filter(Boolean);
@@ -71,5 +74,13 @@ export async function seedDatabase(): Promise<Record<string, string>> {
   for (const table of ['cities', 'vehicle_types', 'routes', 'city_images', 'route_faqs']) {
     await query(`SELECT setval(pg_get_serial_sequence('${table}', 'id'), COALESCE((SELECT max(id) FROM ${table}), 1))`);
   }
+  const added = await query(`INSERT INTO city_images (city_id, file_name, sort_order)
+  SELECT c.id, x.file_name, COALESCE(x.sort_order, 0)
+  FROM jsonb_to_recordset($1::jsonb) AS x(city_slug text, file_name text, sort_order int)
+  JOIN cities c ON c.slug = x.city_slug
+  WHERE NOT EXISTS (SELECT 1 FROM city_images i WHERE i.file_name = x.file_name)
+    AND (SELECT count(*) FROM city_images i WHERE i.city_id = c.id) < 3
+  RETURNING id`, [JSON.stringify(addedCityImages)]);
+  report.city_images_added = `added ${added.length} new photos`;
   return report;
 }
