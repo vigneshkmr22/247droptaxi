@@ -7,6 +7,7 @@ import { quote, type Vehicle } from './fare';
 import { ApiError } from './http';
 import type { City, CityDetail, CityImageInfo, Faq, RouteItem, RouteResponse, Tariff } from './types';
 import { roughDistance } from './geo';
+import { addedPhotosReady } from './added-photos';
 
 interface VehicleRow {
   id: number; name: string; seats: number; rate_per_km: number; driver_allowance: number;
@@ -78,6 +79,7 @@ const spots = (c: CityRow): string[] => (Array.isArray(c.popular_spots) ? c.popu
 
 /** Active cities for the dropdowns, city cards and sitemap. `hasRoutes` is true when the city is on any stored route. */
 export async function activeCities(): Promise<City[]> {
+  await addedPhotosReady();
   const [cities, images, withRoutes] = await Promise.all([
     activeCityRows(),
     imagesByCity(),
@@ -110,6 +112,7 @@ export async function indexableRoutes(): Promise<RouteItem[]> {
 
 /** One city with its overview and a fare entry for every other active city (stored route, or a rough estimate). */
 export async function cityDetail(slug: string): Promise<CityDetail> {
+  await addedPhotosReady();
   const city = await cityRowBySlug(slug);
   if (!city || !city.is_active) throw new ApiError(404, 'City not found');
   const [{ cheapest, gstRate }, all, stored, images] = await Promise.all([
