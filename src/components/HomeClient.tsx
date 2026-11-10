@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CityCard } from './CityCard';
 import { PlaceInput } from './PlaceInput';
+import { Testimonials } from './Testimonials';
 import { cityQuote, tripQuote, sendEnquiry, ApiFailure } from '@/lib/api-client';
 import { cityGradient, cityIcon } from '@/lib/city-theme';
 import { inr, localDate, localTime, num } from '@/lib/format';
@@ -379,6 +380,8 @@ export function HomeClient({ cities, routes, tariff, packages, placesConfigured 
           </div>
         </div>
       </section>
+
+      <Testimonials />
 
       {rowCities.length > 0 && (
         <section className="section alt">

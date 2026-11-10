@@ -515,3 +515,25 @@ main { min-height: 60vh; }
 .ticker-item b { margin-right: 8px; color: #7a4b00; }
 @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-12.5%); } }
 @media (prefers-reduced-motion: reduce) { .ticker-track { display: none; } .ticker-static { display: block; } }
+
+/* Customer reviews on the home page: a carousel that scrolls sideways, one card per step */
+.reviews { padding: 52px 0 56px; }
+.reviews-lead { text-align: center; margin: -8px auto 28px; max-width: 36em; color: var(--muted); }
+.reviews-carousel { position: relative; }
+.reviews-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 14px; scrollbar-width: none; }
+.reviews-track::-webkit-scrollbar { display: none; }
+.review-card { flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start; display: flex; flex-direction: column; margin: 0; padding: 22px 22px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+.review-stars { color: var(--primary); font-size: 1.15rem; letter-spacing: 2px; margin-bottom: 10px; }
+.review-card blockquote { flex: 1; margin: 0 0 16px; color: #2b2f38; font-size: 0.96rem; line-height: 1.6; overflow-wrap: anywhere; }
+.review-card figcaption { display: flex; align-items: center; gap: 12px; }
+.review-card figcaption strong { display: block; font-size: 0.95rem; }
+.review-card figcaption small { color: var(--muted); font-size: 0.8rem; }
+.review-avatar { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--primary); font-weight: 800; }
+.reviews-arrow { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--ink); color: var(--primary); font-size: 1.7rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); }
+.reviews-arrow:hover { background: var(--primary); color: var(--ink); }
+.reviews-arrow.prev { left: -21px; }
+.reviews-arrow.next { right: -21px; }
+.reviews-more { text-align: center; margin: 14px 0 0; }
+@media (max-width: 1180px) { .reviews-arrow.prev { left: 4px; } .reviews-arrow.next { right: 4px; } }
+@media (max-width: 1000px) { .review-card { flex-basis: calc((100% - 20px) / 2); } }
+@media (max-width: 620px) { .reviews { padding: 40px 0 44px; } .review-card { flex-basis: 86%; } .reviews-arrow { display: none; } }
